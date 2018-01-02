@@ -2,7 +2,7 @@
 
 
 pipeline {
-    agent any
+    agent {label 'slave'}
     tools {
         maven 'Maven 3'
         jdk 'jdk1.8.0_152'
@@ -65,6 +65,18 @@ pipeline {
 				}
 }
 		}
+		stage ('Deploy') {
+            steps {
+				bat 'mvn deploy'
+            }
+            post {
+                success {
+                    junit 'target/surefire-reports/*.xml' 
+                }
+				
+            }
+        }
+		
 		
     }
 }
