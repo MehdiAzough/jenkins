@@ -9,13 +9,7 @@ pipeline {
     }
     stages {
         
-        stage ('Build') {
-            steps {
-				bat 'mvn install'
-            }
-           
-        }
-        stage ('unit test') {
+        stage ('Install') {
             steps {
 				bat 'mvn install'
             }
@@ -23,6 +17,41 @@ pipeline {
                 success {
                     junit 'target/surefire-reports/*.xml' 
                 }
+				
+            }
+        }
+		stage ('Package') {
+            steps {
+				bat 'mvn package'
+            }
+            post {
+                success {
+                    junit 'target/surefire-reports/*.xml' 
+                }
+				
+            }
+        }
+		 stage ('Compile') {
+            steps {
+				bat 'mvn complie'
+            }
+            post {
+                success {
+                    junit 'target/surefire-reports/*.xml' 
+                }
+				
+            }
+        }
+		
+		stage ('Site') {
+            steps {
+				bat 'mvn site'
+            }
+            post {
+                success {
+                    junit 'target/surefire-reports/*.xml' 
+                }
+				
             }
         }
 
