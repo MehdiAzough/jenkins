@@ -1,3 +1,6 @@
+
+
+
 pipeline {
     agent any
     tools {
@@ -8,19 +11,32 @@ pipeline {
         
         stage ('Build') {
             steps {
-            bat 'mvn install'
+				bat 'mvn install'
+            }
+           
+        }
+        stage ('unit test') {
+            steps {
+				bat 'mvn install'
             }
             post {
                 success {
-                    junit 'target/surefire-reports/**/*.xml' 
+                    junit 'target/surefire-reports/*.xml' 
                 }
             }
         }
-		stage('Test') {
-            steps {              
-                sh 'make check || true' 
-                junit '**/target/*.xml' 
-            }
+
+		stage('cobertura'){
+			steps{
+				bat 'mvn cobertura:cobertura -Dcobertura.report.format=xml'
+			}
+			post{
+				success {
+					step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'target/site/cobertura/*.xml', failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false])
+				}
+}
 		}
+		
     }
 }
+
