@@ -31,9 +31,9 @@ pipeline {
 				
             }
         }
-		 stage ('Compile') {
+		 stage ('compile') {
             steps {
-				bat 'mvn complie'
+				bat 'mvn compile'
             }
             post {
                 success {
